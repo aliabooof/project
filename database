@@ -1,0 +1,102 @@
+DROP DATABASE IF EXISTS Ecommerce;
+CREATE DATABASE Ecommerce;
+USE Ecommerce;
+CREATE TABLE Customer
+(
+  Cid INT NOT NULL AUTO_INCREMENT, 
+  Email VARCHAR(50) NOT NULL,
+  PhoneNo CHAR(11) NOT NULL,
+  Password varchar(255) NOT NULL,
+  Address varchar(255) NOT NULL,
+  Name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (Cid),
+  UNIQUE (Email),
+  UNIQUE (PhoneNo),
+  UNIQUE (Cid, Email, PhoneNo, Address, Name)
+);
+
+CREATE TABLE Store
+(
+  Sid INT NOT NULL AUTO_INCREMENT,
+  SName VARCHAR(50) NOT NULL,
+  Address VARCHAR(200) NOT NULL,
+  Password VARCHAR(20) NOT NULL,
+  PhoneNo CHAR(11) NOT NULL,
+  Email VARCHAR(50) NOT NULL,
+  PRIMARY KEY (Sid),
+  UNIQUE (PhoneNo),
+  UNIQUE (Email)
+);
+
+CREATE TABLE Category
+(
+  CatID INT NOT NULL AUTO_INCREMENT,
+  CatName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (CatID)
+);
+
+CREATE TABLE Club
+(
+  ClubID INT NOT NULL AUTO_INCREMENT,
+  ClubName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (ClubID)
+);
+
+CREATE TABLE Product
+(
+  Pid INT NOT NULL AUTO_INCREMENT,
+  PName VARCHAR(50) NOT NULL,
+  Price FLOAT NOT NULL,
+  Size VARCHAR(20) NOT NULL,
+  Color VARCHAR(20) NOT NULL,
+  NumberAvailable INT NOT NULL,
+  Description VARCHAR(200) NOT NULL,
+  Available BOOL NOT NULL DEFAULT 1,
+  CatID INT NOT NULL,
+  ClubID INT NOT NULL,
+  PRIMARY KEY (Pid),
+  FOREIGN KEY (CatID) REFERENCES Category(CatID),
+  FOREIGN KEY (ClubID) REFERENCES Club(ClubID)
+);
+
+CREATE TABLE Orders
+(
+  OrderNumber INT NOT NULL AUTO_INCREMENT,
+  Status boolean default 0,
+  Cid INT NOT NULL,
+  Pid INT NOT NULL,
+  PRIMARY KEY (OrderNumber),
+  FOREIGN KEY (Cid) REFERENCES Customer(Cid),
+  FOREIGN KEY (Pid) REFERENCES Product(Pid)
+  
+);
+
+CREATE TABLE Sell
+(
+  Sid INT NOT NULL,
+  Pid INT NOT NULL,
+  PRIMARY KEY (Sid, Pid),
+  FOREIGN KEY (Sid) REFERENCES Store(Sid),
+  FOREIGN KEY (Pid) REFERENCES Product(Pid)
+);
+
+CREATE TABLE Cart
+(
+  Cid INT NOT NULL,
+  Pid INT NOT NULL,
+  FOREIGN KEY (Cid) REFERENCES Customer(Cid),
+  FOREIGN KEY (Pid) REFERENCES Product(Pid)
+);
+
+CREATE TABLE Product_Picture
+(
+  Picture INT NOT NULL,
+  Pid INT NOT NULL,
+  PRIMARY KEY (Picture, Pid),
+  FOREIGN KEY (Pid) REFERENCES Product(Pid)
+);
+
+INSERT INTO category(CatName) Values('T-Shirts'),('Shorts'), ('Socks'), ('Bags'), ('Accessories');
+INSERT INTO Club(ClubName) VALUES('Real Madrid'), ('Barcelona'), ('Al-Ahly'), ('Zamalek'), ('Chelsea'), ('Liverpool'), ('Manchester United');
+INSERT INTO product (PName, Price, Size, Color, NumberAvailable, Description, Available, CatID, ClubID) VALUES('Mo Salah T-Shirt', 200, 'L', 'Red', 7, 'Mo Salah Mo SALAAAAH', 1, 1,6),
+																											  ('Cristiano Ronaldo T-Shirt', 200, 'M', 'Red', 15, '', 1, 1,7);
